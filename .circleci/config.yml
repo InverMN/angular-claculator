@@ -63,7 +63,7 @@ jobs:
         image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator:$CIRCLE_SHA1
         platform: managed
         region: europe-north1
-        service-name: angular-calculator-00001-yuk
+        service-name: angular-calculator
         unauthenticated: true
     - run: 
         command: |
