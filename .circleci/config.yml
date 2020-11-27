@@ -35,9 +35,9 @@ jobs:
         docker tag $REPO:$TAG $REPO:latest
         docker push $REPO:$TAG
         docker push $REPO:latest
-        docker tag $REPO:$TAG gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
+        docker tag $REPO:$TAG gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1
     - gcp-gcr/push-image:
-        image: angular-calculator-${CIRCLE_SHA1}
+        image: angular-calculator-$CIRCLE_SHA1
         tag: $TAG
     - run: 
         command: |
@@ -60,7 +60,7 @@ jobs:
     steps:
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
-          image: gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
+          image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1
           platform: managed
           region: europe-north1
           service-name: angular-calculator-00001-nir
