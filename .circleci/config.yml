@@ -1,0 +1,54 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+    - image: cimg/node:14.15
+    steps:
+    - checkout
+    - run: yarn global add @angular/cli
+    - run: ng build --prod
+    - persist_to_workspace:
+        root: ./
+        paths:
+          - "dist"
+          - "Dockerfile"
+  publish:
+    docker:
+    - image: cimg/base:2020.11
+    resource_class: small
+    steps:
+    - attach_workspace:
+        at: ./
+    - setup_remote_docker:
+        version: 18.09.3
+        docker_layer_caching: false
+    - run: |
+        TAG=$VERSION.$CIRCLE_BUILD_NUM
+        docker build -t $REPO:$TAG .
+        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+        docker tag $REPO:$TAG $REPO:latest
+        docker push $REPO:$TAG
+        docker push $REPO:latest
+    - run: 
+        command: |
+          curl --header "Content-Type: application/json" \
+          --request POST \
+          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"success\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+          https://enm80iuzvo27wof.m.pipedream.net
+        when: on_success
+    - run: 
+        command: |
+          curl --header "Content-Type: application/json" \
+          --request POST \
+          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+          https://enm80iuzvo27wof.m.pipedream.net
+        when: on_fail
+
+workflows:
+  regular:
+    jobs:
+    - build
+    - publish:
+        requires:
+          - build
