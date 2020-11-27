@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
-  gcloud: circleci/gcp-cli@2.1.0
+  gcp-gcr: circleci/gcp-gcr@0.11.0
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
     - setup_remote_docker:
         version: 18.09.3
         docker_layer_caching: false
-    - gcloud/install
+    - gcp-gcr/gcr-auth
     - run: |
         TAG=$VERSION.$CIRCLE_BUILD_NUM
         docker build -t $REPO:$TAG .
@@ -35,12 +35,10 @@ jobs:
         docker tag $REPO:$TAG $REPO:latest
         docker push $REPO:$TAG
         docker push $REPO:latest
-        echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-        gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-        gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-        gcloud auth configure-docker
         docker tag $REPO:$TAG gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
-        docker push gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
+    - gcp-gcr/push-image:
+        image: angular-calculator-${CIRCLE_SHA1}
+        tag: $TAG
     - run: 
         command: |
           curl --header "Content-Type: application/json" \
