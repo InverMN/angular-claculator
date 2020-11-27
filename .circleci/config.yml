@@ -35,7 +35,8 @@ jobs:
         docker tag $REPO:$TAG $REPO:latest
         docker push $REPO:$TAG
         docker push $REPO:latest
-        docker tag $REPO:$TAG gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1
+        docker tag $REPO:$TAG gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$TAG
+    - echo: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$TAG
     - gcp-gcr/push-image:
         image: angular-calculator-$CIRCLE_SHA1
         tag: $TAG
