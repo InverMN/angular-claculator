@@ -6,8 +6,8 @@ jobs:
     - image: cimg/node:14.15
     steps:
     - checkout
-    - run: yarn global add @angular/cli
-    - run: ng build --prod
+    - run: yarn add @angular/cli
+    - run: yarn ng build --prod
     - persist_to_workspace:
         root: ./
         paths:
