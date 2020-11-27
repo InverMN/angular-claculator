@@ -17,6 +17,13 @@ jobs:
         paths:
           - "dist"
           - "Dockerfile"
+    - run: 
+        command: |
+          curl --header "Content-Type: application/json" \
+          --request POST \
+          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+          https://enm80iuzvo27wof.m.pipedream.net
+        when: on_fail
   publish:
     docker:
     - image: cimg/base:2020.11
@@ -44,6 +51,25 @@ jobs:
         command: |
           curl --header "Content-Type: application/json" \
           --request POST \
+          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+          https://enm80iuzvo27wof.m.pipedream.net
+        when: on_fail
+  deploy:
+    docker: 
+    - image: cimg/base:2020.11
+    resource_class: small
+    steps:
+    - gcp-cloud-run/init
+    - gcp-cloud-run/deploy:
+        image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$VERSION.$CIRCLE_BUILD_NUM
+        platform: managed
+        region: europe-north1
+        service-name: angular-calculator-00001-nir
+        unauthenticated: true
+    - run: 
+        command: |
+          curl --header "Content-Type: application/json" \
+          --request POST \
           --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"success\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
           https://enm80iuzvo27wof.m.pipedream.net
         when: on_success
@@ -54,18 +80,6 @@ jobs:
           --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
           https://enm80iuzvo27wof.m.pipedream.net
         when: on_fail
-  deploy:
-    docker: 
-    - image: cimg/base:2020.11
-    resource_class: small
-    steps:
-      - gcp-cloud-run/init
-      - gcp-cloud-run/deploy:
-          image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1
-          platform: managed
-          region: europe-north1
-          service-name: angular-calculator-00001-nir
-          unauthenticated: true
 
 workflows:
   regular:
