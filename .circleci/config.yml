@@ -46,7 +46,7 @@ jobs:
     - run: echo gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$TAG
     - gcp-gcr/push-image:
         image: angular-calculator-$CIRCLE_SHA1
-        tag: $VERSION.$CIRCLE_BUILD_NUM
+        tag: latest
     - run: 
         command: |
           curl --header "Content-Type: application/json" \
@@ -61,7 +61,7 @@ jobs:
     steps:
     - gcp-cloud-run/init
     - gcp-cloud-run/deploy:
-        image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$VERSION.$CIRCLE_BUILD_NUM
+        image: gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:latest
         platform: managed
         region: europe-north1
         service-name: angular-calculator-00001-nir
