@@ -39,7 +39,7 @@ jobs:
     - run: echo gcr.io/$GOOGLE_PROJECT_ID/angular-calculator-$CIRCLE_SHA1:$TAG
     - gcp-gcr/push-image:
         image: angular-calculator-$CIRCLE_SHA1
-        tag: $TAG
+        tag: $VERSION.$CIRCLE_BUILD_NUM
     - run: 
         command: |
           curl --header "Content-Type: application/json" \
