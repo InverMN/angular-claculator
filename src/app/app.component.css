@@ -1,9 +1,9 @@
 #root {
   margin: 0 auto;
   height: 500px; 
-  max-width: 400px;
+  max-width: 350px;
 
   display: flex;
 
-  background-color: cadetblue;
+  background-color: black;
 }
