@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
+
 jobs:
   build:
     docker:
@@ -16,6 +19,7 @@ jobs:
   publish:
     docker:
     - image: cimg/base:2020.11
+    - image: google/cloud-sdk
     resource_class: small
     steps:
     - attach_workspace:
@@ -30,6 +34,12 @@ jobs:
         docker tag $REPO:$TAG $REPO:latest
         docker push $REPO:$TAG
         docker push $REPO:latest
+        echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+        gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+        gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+        gcloud auth configure-docker
+        docker tag $REPO:$TAG gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
+        docker push gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
     - run: 
         command: |
           curl --header "Content-Type: application/json" \
@@ -44,6 +54,18 @@ jobs:
           --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
           https://enm80iuzvo27wof.m.pipedream.net
         when: on_fail
+  deploy:
+    docker: 
+    - image: cimg/base:2020.11
+    resource_class: small
+    steps:
+      - gcp-cloud-run/init
+      - gcp-cloud-run/deploy:
+          image: gcr.io/${GOOGLE_PROJECT_ID}/angular-calculator-${CIRCLE_SHA1}
+          platform: managed
+          region: europe-north1
+          service-name: angular-calculator-00001-nir
+          unauthenticated: true
 
 workflows:
   regular:
@@ -52,3 +74,6 @@ workflows:
     - publish:
         requires:
           - build
+    - deploy:
+        requires:
+          - publish
