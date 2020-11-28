@@ -3,6 +3,37 @@ version: 2.1
 orbs:
   gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
   gcp-gcr: circleci/gcp-gcr@0.11.0
+  discord: 
+    commands:
+      log_fail:
+        steps:
+          - run:
+              name: Log failure to Discord
+              when: on_fail
+              command: |
+                curl --header "Content-Type: application/json" \
+                --request POST \
+                --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+                https://enm80iuzvo27wof.m.pipedream.net
+      log:
+        steps:
+          - run:
+              name: Log failure to Discord
+              when: on_fail
+              command: |
+                curl --header "Content-Type: application/json" \
+                --request POST \
+                --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+                https://enm80iuzvo27wof.m.pipedream.net
+          - run: 
+              name: Log success to Discord
+              when: on_success
+              command: |
+                curl --header "Content-Type: application/json" \
+                --request POST \
+                --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"success\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
+                https://enm80iuzvo27wof.m.pipedream.net
+
 
 jobs:
   build:
@@ -17,13 +48,7 @@ jobs:
         paths:
           - "dist"
           - "Dockerfile"
-    - run: 
-        command: |
-          curl --header "Content-Type: application/json" \
-          --request POST \
-          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
-          https://enm80iuzvo27wof.m.pipedream.net
-        when: on_fail
+    - discord/log_fail
   publish:
     docker:
     - image: cimg/base:2020.11
@@ -46,13 +71,7 @@ jobs:
     - gcp-gcr/push-image:
         image: angular-calculator
         tag: $CIRCLE_SHA1
-    - run: 
-        command: |
-          curl --header "Content-Type: application/json" \
-          --request POST \
-          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
-          https://enm80iuzvo27wof.m.pipedream.net
-        when: on_fail
+    - discord/log_fail
   deploy:
     docker: 
     - image: cimg/base:2020.11
@@ -65,20 +84,7 @@ jobs:
         region: europe-north1
         service-name: angular-calculator
         unauthenticated: true
-    - run: 
-        command: |
-          curl --header "Content-Type: application/json" \
-          --request POST \
-          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"success\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
-          https://enm80iuzvo27wof.m.pipedream.net
-        when: on_success
-    - run: 
-        command: |
-          curl --header "Content-Type: application/json" \
-          --request POST \
-          --data "{\"owner\":\"${CIRCLE_PROJECT_USERNAME}\",\"status\":\"fail\",\"build\":{\"url\":\"$CIRCLE_BUILD_URL\"},\"repo\":\"$CIRCLE_PROJECT_REPONAME\"}" \
-          https://enm80iuzvo27wof.m.pipedream.net
-        when: on_fail
+    - discord/log
 
 workflows:
   regular:
