@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { DisplayComponent } from './display/display.component';
 import { ControlsComponent } from './controls/controls.component';
+import { ButtonComponent } from './button/button.component';
 
 @NgModule({
-  declarations: [AppComponent, DisplayComponent, ControlsComponent],
+  declarations: [AppComponent, DisplayComponent, ControlsComponent, ButtonComponent],
   imports: [BrowserModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
