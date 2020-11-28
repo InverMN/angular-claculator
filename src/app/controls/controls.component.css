@@ -1,0 +1,8 @@
+.wrapper {
+  padding: 12px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+}
