@@ -9,6 +9,7 @@
   width: 320px;
 
   display: flex;
+  flex-direction: column;
 
   background-color: black;
   border: 1.5px solid grey;
