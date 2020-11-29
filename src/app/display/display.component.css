@@ -1,5 +1,6 @@
 :host {
-  margin: 20px 12px;
+  margin: 14px 12px;
   font-size: 35px;
   text-align: right;
+  min-height: 40px;
 }
