@@ -1,8 +1,5 @@
-.wrapper {
-  padding: 20px 12px;
-}
-
-.display {
+:host {
+  margin: 20px 12px;
   font-size: 35px;
   text-align: right;
 }
