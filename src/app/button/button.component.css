@@ -5,3 +5,15 @@
 
   text-align: center;
 }
+
+.operator:host {
+  background-color: rgb(19, 19, 19);
+}
+
+.digit:host {
+  background-color: rgb(6, 6, 6);
+}
+
+.calculation:host {
+  background-color: rgb(20, 70, 108);
+}
