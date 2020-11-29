@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { DisplayComponent } from './display/display.component';
@@ -15,7 +14,7 @@ import { ButtonComponent } from './button/button.component';
     ControlsComponent,
     ButtonComponent,
   ],
-  imports: [BrowserModule, FormsModule, FlexLayoutModule],
+  imports: [BrowserModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

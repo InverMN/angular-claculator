@@ -1,3 +1,7 @@
-.wrapper {
-  padding: 12px;
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  margin: 12px;
 }
