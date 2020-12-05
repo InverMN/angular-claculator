@@ -4,9 +4,7 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent],
     }).compileComponents();
   });
 
@@ -16,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'angular-calculator'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('angular-calculator');
+  it('should create new empty expression array', () => {
+    const app = TestBed.createComponent(AppComponent).componentInstance;
+    const { expression } = app;
+    expect(expression.length).toBe(0);
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('angular-calculator app is running!');
+  it('by appending "0" to empty expression nothing should change', () => {
+    const app = TestBed.createComponent(AppComponent).componentInstance;
+    const { expression } = app;
+    expression.append('0');
+    expect(expression.length).toBe(0);
   });
 });

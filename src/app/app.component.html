@@ -1,28 +1,28 @@
 <app-display [expression]="expression"></app-display>
 
 <div class="controls">
-  <app-button character="CE" class="operator" (click)="clearExpression()"></app-button>
-  <app-button character="C" class="operator" (click)="clearLast()"></app-button>
-  <app-button character="DEL" class="operator" (click)="deleteLastCharacter()"></app-button>
-  <app-button character="/" class="operator" (click)="append('/')"></app-button>
+  <app-button character="CE" class="operator" (click)="expression.clear()"></app-button>
+  <app-button character="C" class="operator" (click)="expression.removeLastSegment()"></app-button>
+  <app-button character="DEL" class="operator" (click)="expression.removeLastDigit()"></app-button>
+  <app-button character="/" class="operator" (click)="expression.append('/')"></app-button>
 
-  <app-button character="7" class="digit" (click)="append('7')"></app-button>
-  <app-button character="8" class="digit" (click)="append('8')"></app-button>
-  <app-button character="9" class="digit" (click)="append('9')"></app-button>
-  <app-button character="8" class="operator" (click)="append('8')"></app-button>
+  <app-button character="7" class="digit" (click)="expression.append('7')"></app-button>
+  <app-button character="8" class="digit" (click)="expression.append('8')"></app-button>
+  <app-button character="9" class="digit" (click)="expression.append('9')"></app-button>
+  <app-button character="*" class="operator" (click)="expression.append('*')"></app-button>
 
-  <app-button character="4" class="digit" (click)="append('4')"></app-button>
-  <app-button character="5" class="digit" (click)="append('5')"></app-button>
-  <app-button character="6" class="digit" (click)="append('6')"></app-button>
-  <app-button character="-" class="operator" (click)="append('-')"></app-button>
+  <app-button character="4" class="digit" (click)="expression.append('4')"></app-button>
+  <app-button character="5" class="digit" (click)="expression.append('5')"></app-button>
+  <app-button character="6" class="digit" (click)="expression.append('6')"></app-button>
+  <app-button character="-" class="operator" (click)="expression.append('-')"></app-button>
 
-  <app-button character="1" class="digit" (click)="append('1')"></app-button>
-  <app-button character="2" class="digit" (click)="append('2')"></app-button>
-  <app-button character="3" class="digit" (click)="append('3')"></app-button>
-  <app-button character="+" class="operator" (click)="append('+')"></app-button>
+  <app-button character="1" class="digit" (click)="expression.append('1')"></app-button>
+  <app-button character="2" class="digit" (click)="expression.append('2')"></app-button>
+  <app-button character="3" class="digit" (click)="expression.append('3')"></app-button>
+  <app-button character="+" class="operator" (click)="expression.append('+')"></app-button>
 
-  <app-button character="-/+" class="digit" (click)="append('negate()')"></app-button>
-  <app-button character="0" class="digit" (click)="append('0')"></app-button>
-  <app-button character="." class="digit" (click)="append('.')"></app-button>
-  <app-button character="=" class="calculation" (click)="calculate()"></app-button>
+  <app-button character="-/+" class="digit" (click)="expression.negate()"></app-button>
+  <app-button character="0" class="digit" (click)="expression.append('0')"></app-button>
+  <app-button character="." class="digit" (click)="expression.append('.')"></app-button>
+  <app-button character="=" class="calculation" (click)="expression.solve()"></app-button>
 </div>
