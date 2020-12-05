@@ -2,5 +2,6 @@
   margin: 14px 12px;
   font-size: 35px;
   text-align: right;
+  overflow: hidden;
   min-height: 40px;
 }
